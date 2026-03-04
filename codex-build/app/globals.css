@@ -1,0 +1,1231 @@
+/* ── Tailwind base (disabled, using plain CSS instead) ──────────────────── */
+
+
+/* ── Global Reset & Base ────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+}
+
+body {
+  font-family: 'IBM Plex Mono', monospace;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+section {
+  padding-top: 140px;
+  padding-bottom: 140px;
+}
+
+@media (max-width: 640px) {
+  section {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+}
+
+/* ── Split-flap board styles ─────────────────────────────────────────────── */
+:root {
+  --splitflap-board-bg: #111111;
+  --splitflap-board-radius: 12px;
+  --splitflap-board-shadow: 0 16px 48px rgba(0, 0, 0, 0.28),
+    0 6px 16px rgba(0, 0, 0, 0.18);
+  --splitflap-tile-bg: #0a0a0a;
+  --splitflap-tile-text: #f2f2f2;
+  --splitflap-tile-height-desktop: 52px;
+  --splitflap-tile-width-desktop: 30px;
+  --splitflap-tile-height-tablet: 40px;
+  --splitflap-tile-width-tablet: 24px;
+  --splitflap-tile-height-mobile: 30px;
+  --splitflap-tile-width-mobile: 18px;
+  --splitflap-flip-duration: 0.28s;
+  --splitflap-font-mono: "IBM Plex Mono", "JetBrains Mono", "Roboto Mono",
+    ui-monospace, monospace;
+  --splitflap-label-color: #888;
+  --splitflap-label-size: 11px;
+  --splitflap-label-spacing: 0.2em;
+}
+
+.splitflap-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.splitflap-label {
+  font-family: var(--splitflap-font-mono);
+  font-size: var(--splitflap-label-size);
+  font-weight: 500;
+  letter-spacing: var(--splitflap-label-spacing);
+  color: var(--splitflap-label-color);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.splitflap-board {
+  background: var(--splitflap-board-bg);
+  border-radius: var(--splitflap-board-radius);
+  box-shadow: var(--splitflap-board-shadow);
+  padding: 18px 20px 20px;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 2px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.splitflap-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+.splitflap-tile {
+  width: var(--splitflap-tile-width-desktop);
+  height: var(--splitflap-tile-height-desktop);
+  perspective: 320px;
+  flex-shrink: 0;
+}
+
+.splitflap-tile-flap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--splitflap-flip-duration)
+    cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.splitflap-tile-flap.splitflap-flipped {
+  transform: rotateX(-180deg);
+}
+
+.splitflap-tile-face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--splitflap-tile-bg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  font-family: var(--splitflap-font-mono);
+  font-size: calc(var(--splitflap-tile-height-desktop) * 0.6);
+  font-weight: 500;
+  color: var(--splitflap-tile-text);
+  line-height: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.splitflap-tile-face-front {
+  transform: rotateX(0deg);
+}
+
+.splitflap-tile-face-back {
+  transform: rotateX(180deg);
+}
+
+@media (max-width: 900px) {
+  .splitflap-tile {
+    width: var(--splitflap-tile-width-tablet);
+    height: var(--splitflap-tile-height-tablet);
+  }
+  .splitflap-tile-face {
+    font-size: calc(var(--splitflap-tile-height-tablet) * 0.58);
+  }
+  .splitflap-board {
+    padding: 20px 24px 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .splitflap-tile {
+    width: 14px;
+    height: 24px;
+  }
+  .splitflap-tile-face {
+    font-size: 14px;
+  }
+  .splitflap-board {
+    padding: 14px 8px 16px;
+    gap: 2px;
+  }
+  .splitflap-label {
+    margin-bottom: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splitflap-tile-flap {
+    transition-duration: 0.05s;
+  }
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ── Scroll sections ─────────────────────────────────────────────────────── */
+.scroll-section {
+  scroll-snap-align: start;
+}
+
+/* ── Hero grid fade ───────────────────────────────────────────────────────── */
+.hero-grid-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
+  pointer-events: none;
+}
+
+/* ── Section background helpers ───────────────────────────────────────────── */
+.section-alt {
+  background: #f7f7f7;
+}
+
+.section-soft {
+  background: #f4f6fb;
+}
+
+/* ── Scroll reveal animation (cinematic travel-style) ─────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(80px);
+  filter: blur(4px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    filter 0.9s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* ── Hero single-line text (desktop) ──────────────────────────────────────── */
+.hero-line {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .hero-line {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-line {
+    font-size: 22px !important;
+    line-height: 1.5 !important;
+    padding-inline: 24px;
+  }
+}
+
+/* Reveal timing variants */
+.reveal.reveal-hero {
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.reveal.reveal-standard {
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    filter 0.8s ease;
+}
+
+.reveal.reveal-narrative {
+  transition:
+    opacity 1s ease,
+    transform 1s ease,
+    filter 1s ease;
+}
+
+/* ── Terminal gate indicator ──────────────────────────────────────────────── */
+.terminal-indicator {
+  position: fixed;
+  top: 96px;
+  right: 20px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.terminal-indicator-inner {
+  pointer-events: auto;
+}
+
+.terminal-title {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.terminal-indicator ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.terminal-indicator li {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: color 0.3s ease;
+}
+
+.terminal-indicator li.active {
+  color: #111;
+  font-weight: 600;
+}
+
+/* ── Folder tabs ─────────────────────────────────────────────────────────── */
+.folder-tab {
+  position: relative;
+}
+
+/* ── Shimmer text ────────────────────────────────────────────────────────── */
+.shimmer-text {
+  display: inline-block;
+  vertical-align: baseline;
+  background: linear-gradient(120deg,
+      #5C6B7C 0%, #5C6B7C 25%,
+      #aac4d4 45%, #d6e8f0 50%,
+      #aac4d4 55%, #5C6B7C 75%, #5C6B7C 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 1.4s linear infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: -200% center;
+  }
+}
+
+
+/* ── Accessibility ───────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Minimalist Nav Links ────────────────────────────────────────────────── */
+.nav-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  position: relative;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding-bottom: 4px;
+  display: inline-block;
+  /* Space for the underline */
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: white;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ── LED Board Hover ─────────────────────────────────────────────────────── */
+.led-board-chrome:hover {
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+  transform: translateY(-2px);
+}
+
+/* ── Collaborate CTA Hover ───────────────────────────────────────────────── */
+.collaborate-btn:hover {
+  border-color: rgba(17, 17, 17, 0.8) !important;
+  opacity: 0.7 !important;
+}
+
+.collaborate-btn:hover .collab-arrow {
+  transform: translateX(4px);
+}
+
+/* ── Destinations / Work ───────────────────────────────────────────────── */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (min-width: 768px) {
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.project-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  align-items: flex-start;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.project-card .case-arrow {
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .case-arrow {
+  transform: translateX(4px);
+}
+
+
+/* ── Flight Path / Process ─────────────────────────────────────────────── */
+.flight-path-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 2fr auto 2fr auto 2fr auto 1fr;
+  grid-template-rows: auto 48px auto 32px auto;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.flight-path-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #111;
+  margin: 0;
+  text-align: center;
+  justify-self: center;
+}
+
+.flight-path-node {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #111;
+  justify-self: center;
+  position: relative;
+  z-index: 2;
+}
+
+.flight-path-line-full {
+  width: 100%;
+  height: 2px;
+  min-height: 2px;
+  background: #e0e0e0;
+  grid-column: 2 / 9;
+  grid-row: 3;
+  align-self: center;
+}
+
+.flight-path-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+  text-align: center;
+  justify-self: center;
+  max-width: 200px;
+}
+
+/* ── Mobile: simplify ── */
+@media (max-width: 767px) {
+  .flight-path-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  /* Reset grid inline styles for mobile flexbox */
+  .flight-path-title,
+  .flight-path-node,
+  .flight-path-desc {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .flight-path-line-full {
+    display: none !important;
+  }
+
+  .flight-path-title {
+    padding: 16px 0 8px 0;
+    font-size: 15px;
+  }
+
+  .flight-path-node {
+    display: none;
+  }
+
+  .flight-path-desc {
+    max-width: 100%;
+    padding: 0 0 32px 0;
+    border-bottom: 1px solid #ebebeb;
+    width: 100%;
+  }
+
+  .flight-path-desc:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* ── About / Boarding Pass ─────────────────────────────────────────────── */
+.about-section {
+  background: #edeae4;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.section-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.boarding-pass-outer {
+  position: relative;
+  border-radius: 26px;
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
+.boarding-pass {
+  display: grid;
+  grid-template-columns: 3fr 1.2fr;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.14),
+    0 3px 10px rgba(0, 0, 0, 0.07);
+  position: relative;
+  /* Support 3D space for stub lift without touching existing outer hover tilt */
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.punch {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: #edeae4;
+  border-radius: 50%;
+  right: calc(100% / 4.22 - 14px);
+  z-index: 20;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.22),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.punch.top {
+  top: -14px;
+}
+
+.punch.bottom {
+  bottom: -14px;
+}
+
+.ticket-main {
+  background: linear-gradient(138deg, #5470f7 0%, #3B5BDB 60%, #2f4bc4 100%);
+  color: white;
+  padding: 44px 48px 0 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.07);
+}
+
+.dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.paper-texture {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.light-sweep {
+  position: absolute;
+  top: -80%;
+  left: -15%;
+  width: 50%;
+  height: 240%;
+  background: linear-gradient(110deg, transparent 44%, rgba(255, 255, 255, 0.06) 50%, transparent 56%);
+  pointer-events: none;
+}
+
+.ticket-main-content {
+  position: relative;
+  z-index: 2;
+}
+
+.airline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.airline-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.boarding-class {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.route-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: flex-end;
+  gap: 0;
+  margin-bottom: 30px;
+}
+
+.airport {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.airport.right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.airport-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.airport-code {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.airport-subtext {
+  font-size: 16px;
+  font-weight: 300;
+  opacity: 0.8;
+  margin-top: 6px;
+  letter-spacing: 0.01em;
+}
+
+.route-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 24px 10px 24px;
+}
+
+.route-path {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.route-dot-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.route-dot-line span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.route-plane {
+  flex-shrink: 0;
+  margin: 0 8px;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+}
+
+.route-plane svg {
+  width: 26px;
+  height: 26px;
+}
+
+.route-flight-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ticket-rule {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  margin-bottom: 22px;
+}
+
+.flight-desc {
+  margin-bottom: 22px;
+}
+
+.block-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  margin-bottom: 6px;
+}
+
+.flight-desc-text {
+  font-size: 15px;
+  line-height: 1.65;
+  font-weight: 300;
+  opacity: 0.92;
+  max-width: 520px;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 18px 0 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.58;
+}
+
+.meta-value {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.meta-value.small {
+  font-size: 12.5px;
+}
+
+.perf-edge {
+  margin-top: 24px;
+  height: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.perf-edge::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0px,
+    rgba(255, 255, 255, 0.25) 8px,
+    transparent 8px,
+    transparent 14px
+  );
+  border-radius: 2px;
+}
+
+.ticket-stub {
+  background: #fdfdfc;
+  padding: 38px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 2px dashed #dcdcdc;
+  position: relative;
+  padding-left: 36px;
+  transform-origin: left center;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.ticket-stub::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.025), transparent);
+  pointer-events: none;
+}
+
+/* Stub lift and perforation depth on hover */
+.boarding-pass:hover .ticket-stub {
+  transform:
+    translateX(6px)
+    rotateY(-6deg)
+    translateZ(6px);
+  box-shadow:
+    -6px 0 14px rgba(0, 0, 0, 0.12);
+}
+
+.boarding-pass:hover .ticket-main::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.08),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.stub-header {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 22px;
+}
+
+.stub-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.stub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stub-field-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.stub-field-value {
+  font-size: 14.5px;
+  color: #1a1a1a;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #3dba73;
+  border-radius: 50%;
+  margin-right: 6px;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 0 rgba(61, 186, 115, 0.6);
+  animation: status-pulse 1.4s ease-out infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(61, 186, 115, 0.55);
+    opacity: 1;
+  }
+
+  60% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(61, 186, 115, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(61, 186, 115, 0);
+    opacity: 1;
+  }
+}
+
+.stub-barcode {
+  margin-top: 24px;
+}
+
+.barcode-bar {
+  height: 80px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    #111 0px, #111 1px,
+    transparent 1px, transparent 3px,
+    #111 3px, #111 5px,
+    transparent 5px, transparent 6px,
+    #111 6px, #111 7px,
+    transparent 7px, transparent 9px,
+    #111 9px, #111 11px,
+    transparent 11px, transparent 12px,
+    #111 12px, #111 13px,
+    transparent 13px, transparent 15px,
+    #111 15px, #111 17px,
+    transparent 17px, transparent 19px,
+    #111 19px, #111 20px,
+    transparent 20px, transparent 22px,
+    #111 22px, #111 24px,
+    transparent 24px, transparent 25px,
+    #111 25px, #111 26px,
+    transparent 26px, transparent 29px,
+    #111 29px, #111 31px,
+    transparent 31px, transparent 33px,
+    #111 33px, #111 34px,
+    transparent 34px, transparent 36px,
+    #111 36px, #111 38px,
+    transparent 38px, transparent 39px,
+    #111 39px, #111 40px,
+    transparent 40px, transparent 43px,
+    #111 43px, #111 44px,
+    transparent 44px, transparent 46px,
+    #111 46px, #111 48px,
+    transparent 48px, transparent 49px,
+    #111 49px, #111 51px,
+    transparent 51px, transparent 53px,
+    #111 53px, #111 54px,
+    transparent 54px, transparent 56px
+  );
+  margin-bottom: 8px;
+}
+
+.barcode-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  color: #bbb;
+  text-align: center;
+}
+
+/* ── Runway footer lights ───────────────────────────────────────────────── */
+.runway-lights-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.runway-light {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4C6EF5;
+  opacity: 0.45;
+  animation: runwayPulse 3s ease-in-out infinite;
+}
+
+@keyframes runwayPulse {
+  0% {
+    opacity: 0.25;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0.25;
+  }
+}
+
+@media (max-width: 900px) {
+  .boarding-pass {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-main {
+    padding: 32px 24px 0 24px;
+  }
+
+  .ticket-stub {
+    border-left: none;
+    border-top: 2px dashed #d9d9d9;
+    padding: 32px 24px;
+  }
+
+  .airport-code {
+    font-size: 46px;
+  }
+
+  .meta-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 16px;
+  }
+
+  .barcode-bar {
+    height: 64px;
+  }
+}
