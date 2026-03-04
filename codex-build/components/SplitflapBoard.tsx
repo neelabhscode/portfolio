@@ -113,7 +113,8 @@ export function SplitflapBoard() {
     const runSequence = (message: string, onAllDone?: () => void) => {
       if (animatingRef.current) return;
       animatingRef.current = true;
-      ensureTiles(message);
+      // Ensure tiles are sized for the max message length (width stays constant)
+      ensureTiles();
 
       const padded = padToMaxLength(message);
       const chars = padded.split("");
