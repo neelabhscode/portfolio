@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import LedBoard from "@/components/LedBoard";
 import { SplitflapBoard } from "@/components/SplitflapBoard";
 
-const NAV_H = 64; // px — total nav height
+const NAV_H = 60; // px — total nav height
 
 function BoardingPass() {
   const tiltRef = useRef<HTMLDivElement>(null);
@@ -45,11 +45,13 @@ function BoardingPass() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "8rem 1rem",
+        padding: "40px 1rem 60px",
       }}
     >
       <div className="section-wrap">
-        <p className="section-title">UX AIR BOARDING PASS</p>
+        <p className="boarding-bridge-line">
+          &quot;I design the gap between what exists and what should.&quot;
+        </p>
 
         <div
           onMouseMove={handleMouseMove}
@@ -69,7 +71,7 @@ function BoardingPass() {
               willChange: "transform",
             }}
           >
-            <div className="boarding-pass-outer">
+            <div className="boarding-pass-outer boarding-pass-reveal">
               <div className="boarding-pass">
             <div className="punch top" />
             <div className="punch bottom" />
@@ -273,14 +275,26 @@ function PassportCard() {
             borderRadius: "1rem", pointerEvents: "none",
             transition: "opacity 0.35s ease", mixBlendMode: "screen",
           }} />
+          <div className="passport-scan-line" aria-hidden="true" />
         </div>
       </div>
     </div>
   );
 }
 
+function GateSeparator({ gate }: { gate: string }) {
+  return (
+    <div className="gate-separator">
+      <div className="gate-separator-line" />
+      <span className="gate-separator-label">GATE {gate}</span>
+      <div className="gate-separator-line" />
+    </div>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
+  const [depClockTime, setDepClockTime] = useState("");
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -288,8 +302,25 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const format = () =>
+      setDepClockTime(
+        new Date().toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          timeZone,
+        })
+      );
+    format();
+    const id = setInterval(format, 1000);
+    return () => clearInterval(id);
+  }, []);
 
-    const reveals = document.querySelectorAll<HTMLElement>(".reveal");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const reveals = document.querySelectorAll<HTMLElement>(".reveal, .boarding-pass-reveal");
     if (!("IntersectionObserver" in window)) {
       reveals.forEach((el) => el.classList.add("visible"));
       return;
@@ -387,9 +418,10 @@ export default function Home() {
           color: "white",
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
+          borderTop: "2px solid #4C6EF5",
           borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          height: `${NAV_H}px`,
+          minHeight: `${NAV_H}px`,
           width: "100%",
         }}
       >
@@ -403,17 +435,26 @@ export default function Home() {
             style={{
               background: "none", border: "none", padding: 0, cursor: "pointer",
               color: "white", fontFamily: "'Inter', sans-serif", fontSize: "14px",
-              fontWeight: 500, letterSpacing: "0.15em"
+              fontWeight: 700, letterSpacing: "0.15em"
             }}
           >
-            NEELABH
+            <span style={{ display: "inline-flex", alignItems: "center" }}>
+              <span>NEELABH</span>
+              <span className="brand-cursor" aria-hidden="true" />
+            </span>
           </button>
 
           {/* Links */}
           <nav style={{ display: "flex", gap: "32px", alignItems: "center" }}>
-            <button onClick={() => scrollTo("destinations")} className="nav-link">work</button>
-            <button onClick={() => scrollTo("about")} className="nav-link">about</button>
-            <button onClick={() => scrollTo("contact")} className="nav-link">collaborate &rarr;</button>
+            <button onClick={() => scrollTo("destinations")} className="nav-link">
+              <span className="nav-link-main">WORK</span>
+            </button>
+            <button onClick={() => scrollTo("about")} className="nav-link">
+              <span className="nav-link-main">ABOUT</span>
+            </button>
+            <a href="mailto:iamneelabhsrivastava@gmail.com" className="nav-link">
+              <span className="nav-link-main">COLLABORATE</span>
+            </a>
           </nav>
         </div>
       </header>
@@ -447,7 +488,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "140px 1rem 4rem",
+            padding: "80px 1rem 40px",
             backgroundColor: "#ffffff",
             position: "relative",
             overflow: "hidden"
@@ -461,8 +502,7 @@ export default function Home() {
               pointerEvents: "none",
               zIndex: 0,
               backgroundImage:
-                // 20% darker than the 70% opacity version (0.021 * 1.2 ≈ 0.025)
-                "linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px)",
+                "linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
               backgroundPosition: "center center",
               maskImage:
@@ -494,8 +534,9 @@ export default function Home() {
               }}
             >
               <div
+                className="hero-fade-up identity-stamp"
                 style={{
-                  fontSize: "11px",
+                  fontSize: "12px",
                   letterSpacing: "0.2em",
                   color: "#999",
                   textAlign: "center",
@@ -503,36 +544,67 @@ export default function Home() {
                   fontFamily:
                     "'Inter', 'IBM Plex Mono', sans-serif, monospace",
                   textTransform: "uppercase",
+                  animation: "heroFadeUp 0.6s ease-out 0.75s forwards, identityStamp 0.35s ease-out 0.8s forwards",
                 }}
               >
-                Identity Verified • Product Designer • 2026
+                Identity Verified ◆ NEELABH SRIVASTAVA ◆ 2026
               </div>
 
-              <PassportCard />
+              <div
+                className="hero-fade-up"
+                style={{
+                  animation: "heroFadeUp 0.85s ease-out 0.15s forwards",
+                }}
+              >
+                <PassportCard />
+              </div>
             </div>
 
             <p
-              className="hero-line"
+              className="hero-line hero-fade-up"
               style={{
                 fontFamily: "'Cardo', serif",
-                fontSize: "28px",
+                fontSize: "32px",
                 fontWeight: 400,
                 color: "#1a1a1a",
                 textAlign: "center",
                 lineHeight: 1.6,
                 marginTop: "44px",
+                animation: "heroFadeUp 0.95s ease-out 1.15s forwards",
               }}
             >
               Neelabh is a{" "}
-              <em className="shimmer-text" style={{ fontStyle: "italic" }}>
+              <em style={{ fontStyle: "italic", color: "#4C6EF5" }}>
                 product designer
               </em>{" "}
               crafting human-centered experiences.
             </p>
+
+            <div
+              className="hero-cta hero-fade-up"
+              role="button"
+              tabIndex={0}
+              onClick={() => scrollTo("departures")}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  scrollTo("departures");
+                }
+              }}
+              style={{
+                animation: "heroFadeUp 0.75s ease-out 1.85s forwards",
+              }}
+            >
+              ↓ Proceed to Departures
+            </div>
           </div>
 
           <div className="hero-grid-fade" />
         </section>
+
+        <div style={{ padding: "24px 0" }}>
+          <GateSeparator gate="01 — DEPARTURES" />
+        </div>
 
         {/* 2. DEPARTURES */}
         <section
@@ -544,37 +616,35 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "4rem 1rem",
+            padding: "60px 1rem",
             backgroundColor: "#ffffff"
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "36px" }}>
-            <div style={{ width: "80px", height: "1px", backgroundColor: "#e5e5e5", marginBottom: "20px" }} />
-            <div style={{
-              fontSize: "12px",
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              color: "#777",
-              textAlign: "center",
-              fontFamily: "'IBM Plex Mono', monospace"
-            }}>
-              Departures
+          <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="departures-divider" />
+            <div className="departures-board-wrap">
+              <div className="departures-header">
+                <span className="departures-header-label">DEPARTURES</span>
+                <span className="departures-header-meta">UX AIRWAYS · TERMINAL 01</span>
+                <span className="departures-header-time" id="dep-clock" aria-live="off">
+                  {depClockTime}
+                </span>
+              </div>
+              <SplitflapBoard />
+              <div className="departures-cta">
+                <span className="departures-cta-label">STATUS: BOARDING</span>
+                <a href="mailto:iamneelabhsrivastava@gmail.com" className="departures-cta-link">
+                  Book a flight with Neelabh →
+                </a>
+              </div>
             </div>
-            <div style={{
-              fontSize: "11px",
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              color: "#888",
-              textAlign: "center",
-              fontFamily: "'IBM Plex Mono', monospace",
-              marginTop: "10px"
-            }}>
-              UX AIRWAYS TERMINAL
-            </div>
-            <div style={{ width: "80px", height: "1px", backgroundColor: "#e5e5e5", marginTop: "20px" }} />
+            <div className="departures-divider" />
           </div>
-          <SplitflapBoard />
         </section>
+
+        <div style={{ padding: "24px 0" }}>
+          <GateSeparator gate="02 — DESTINATIONS" />
+        </div>
 
         {/* 3. WORK */}
         <section
@@ -585,7 +655,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "140px 1rem 8rem 1rem",
+            padding: "60px 1rem",
             backgroundColor: "#ffffff"
           }}
         >
@@ -594,11 +664,14 @@ export default function Home() {
             letterSpacing: "0.25em",
             textTransform: "uppercase",
             color: "#777",
-            marginBottom: "48px",
+            marginBottom: "32px",
             textAlign: "center",
             fontFamily: "'IBM Plex Mono', monospace"
           }}>
             Destinations
+            <p className="section-sub-label">
+              Select your flight below
+            </p>
           </div>
 
           <div className="project-grid">
@@ -608,60 +681,75 @@ export default function Home() {
                 route: "UX-01",
                 type: "E-commerce UX redesign",
                 year: "2026",
-                desc: "Redesigning product discovery and purchase flow to improve usability and trust."
+                desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
+                status: "BOARDING" as const,
+                placeholder: false,
               },
               {
                 title: "KULLVI WHIMS",
                 route: "UX-02",
                 type: "E-commerce UX redesign",
                 year: "2025",
-                desc: "Redesigning product discovery and purchase flow to improve usability and trust."
+                desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
+                status: "ON TIME" as const,
+                placeholder: false,
               },
               {
                 title: "TILFI",
                 route: "UX-03",
                 type: "E-commerce UX redesign",
                 year: "2026",
-                desc: "Redesigning product discovery and purchase flow to improve usability and trust."
+                desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
+                status: "CASE STUDY READY" as const,
+                placeholder: false,
               },
               {
-                title: "",
-                route: "",
+                title: "ROUTE UNDISCLOSED",
+                route: "UX-04",
                 type: "",
                 year: "",
-                desc: ""
+                desc: "Next destination being charted. Check back soon.",
+                status: "COMING SOON" as const,
+                placeholder: true,
               }
             ].map((proj, idx) => (
               <a
-                href={proj.title ? "#" : undefined}
+                href={proj.placeholder ? undefined : "#"}
                 className="project-card"
                 key={idx}
                 style={{
-                  opacity: proj.title ? 1 : 0.05,
-                  pointerEvents: proj.title ? 'auto' : 'none',
+                  opacity: proj.placeholder ? 0.6 : 1,
+                  pointerEvents: proj.placeholder ? 'none' : 'auto',
                   textDecoration: "none"
                 }}
               >
-                {proj.title ? (
+                {!proj.placeholder ? (
                   <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "100%" }}>
 
-                    {/* Top Row: Title + Year */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", width: "100%", marginBottom: "8px" }}>
-                      <h3 style={{ fontSize: "20px", fontFamily: "'Inter', sans-serif", fontWeight: 600, color: "#111", letterSpacing: "-0.02em", margin: 0, display: "flex", alignItems: "center" }}>
-                        <span style={{ fontSize: "12px", letterSpacing: "0.15em", color: "#888", marginRight: "8px", fontFamily: "'IBM Plex Mono', monospace" }}>{proj.route}</span>
-                        {proj.title}
+                    {/* Top Row: Title + (Year & Status) */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", marginBottom: "8px", gap: "12px" }}>
+                      <h3 style={{ fontSize: "20px", fontFamily: "'Inter', sans-serif", fontWeight: 600, color: "#111", letterSpacing: "-0.02em", margin: 0, display: "flex", alignItems: "center", minWidth: 0 }}>
+                        <span style={{ fontSize: "13px", letterSpacing: "0.2em", color: "#4C6EF5", marginRight: "8px", fontFamily: "'IBM Plex Mono', monospace", flexShrink: 0 }}>{proj.route}</span>
+                        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{proj.title}</span>
                       </h3>
-                      <span style={{ fontSize: "14px", fontFamily: "'IBM Plex Mono', monospace", color: "#111", letterSpacing: "0.05em", fontWeight: 500 }}>
-                        {proj.year}
-                      </span>
+                      <div style={{ flexShrink: 0 }}>
+                        <span className="card-status-chip">
+                          {proj.status}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Metadata */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "2px", marginBottom: "12px" }}>
                       <span style={{ fontSize: "11px", letterSpacing: "0.18em", color: "#999", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>ROUTE</span>
-                      <span style={{ fontSize: "13px", letterSpacing: "0.05em", fontFamily: "'IBM Plex Mono', monospace", color: "#777" }}>
-                        {proj.type}
-                      </span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "12px" }}>
+                        <span style={{ fontSize: "13px", letterSpacing: "0.05em", fontFamily: "'IBM Plex Mono', monospace", color: "#777" }}>
+                          {proj.type}
+                        </span>
+                        <span style={{ fontSize: "14px", fontFamily: "'IBM Plex Mono', monospace", color: "#111", letterSpacing: "0.05em", fontWeight: 500, flexShrink: 0 }}>
+                          {proj.year}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Divider Line */}
@@ -683,17 +771,28 @@ export default function Home() {
                     </div>
                   </div>
                 ) : (
-                  <div style={{
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    height: "100%", width: "100%", minHeight: "220px"
-                  }}>
-                    {/* Empty placeholder */}
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "100%" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", marginBottom: "8px", gap: "12px" }}>
+                      <h3 style={{ fontSize: "18px", fontFamily: "'Inter', sans-serif", fontWeight: 500, color: "#111", letterSpacing: "0.12em", margin: 0, textTransform: "uppercase", minWidth: 0 }}>
+                        {proj.title}
+                      </h3>
+                      <span className="card-status-chip card-status-chip--soon" style={{ flexShrink: 0 }}>
+                        {proj.status}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: "14px", fontFamily: "'Inter', sans-serif", color: "#666", lineHeight: 1.6 }}>
+                      {proj.desc}
+                    </p>
                   </div>
                 )}
               </a>
             ))}
           </div>
         </section>
+
+        <div style={{ padding: "24px 0" }}>
+          <GateSeparator gate="03 — FLIGHT PATH" />
+        </div>
 
         {/* 4. PROCESS */}
         <section
@@ -705,8 +804,8 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "8rem 1rem",
-            backgroundColor: "#ffffff"
+            padding: "60px 1rem",
+            backgroundColor: "#fafafa"
           }}
         >
           <div style={{
@@ -714,55 +813,65 @@ export default function Home() {
             letterSpacing: "0.25em",
             textTransform: "uppercase",
             color: "#777",
-            marginBottom: "64px",
+            marginBottom: "32px",
             textAlign: "center",
             fontFamily: "'IBM Plex Mono', monospace"
           }}>
             Design Path
+            <p className="section-sub-label" style={{ marginBottom: 0 }}>
+              How I fly from brief to launch
+            </p>
           </div>
 
-          <div className="flight-path-grid">
-            {/* Continuous Line (Desktop Only) */}
-            <div
-              className="flight-path-line-full"
-              style={{
-                gridColumn: "2 / 9",
-                gridRow: 3,
-                width: "100%",
-                height: "2px",
-                backgroundColor: "#d1d5db",
-                alignSelf: "center",
-                zIndex: 1
-              }}
-            />
+          <div className="flight-timeline">
+            <div className="flight-timeline-rail">
+              <div className="flight-timeline-line" aria-hidden="true" />
+              <div className="flight-stop">
+                <div className="flight-stop-dot" />
+              </div>
+              <div className="flight-stop">
+                <div className="flight-stop-dot" />
+              </div>
+              <div className="flight-stop">
+                <div className="flight-stop-dot" />
+              </div>
+              <div className="flight-stop">
+                <div className="flight-stop-dot" />
+              </div>
+            </div>
 
-            {/* Steps */}
-            {[
-              {
-                title: "DISCOVER",
-                desc: "Understanding users, problems and context."
-              },
-              {
-                title: "DEFINE",
-                desc: "Clarifying the core problem and constraints."
-              },
-              {
-                title: "DESIGN",
-                desc: "Exploring solutions and building prototypes."
-              },
-              {
-                title: "REFINE",
-                desc: "Testing, learning and improving the product."
-              }
-            ].map((step, i) => (
-              <React.Fragment key={i}>
-                <h4 className="flight-path-title" style={{ gridColumn: i * 2 + 2, gridRow: 1 }}>{step.title}</h4>
-                <div className="flight-path-node" style={{ gridColumn: i * 2 + 2, gridRow: 3 }} />
-                <p className="flight-path-desc" style={{ gridColumn: i * 2 + 2, gridRow: 5 }}>{step.desc}</p>
-              </React.Fragment>
-            ))}
+            <div className="flight-steps">
+              <div className="flight-step">
+                <h3 className="flight-step-heading">
+                  <span className="flight-step-num">01.</span> DISCOVER
+                </h3>
+                <p className="flight-step-desc">Understanding users, problems, and new contexts through research and observation.</p>
+              </div>
+              <div className="flight-step">
+                <h3 className="flight-step-heading">
+                  <span className="flight-step-num">02.</span> DEFINE
+                </h3>
+                <p className="flight-step-desc">Clarifying the core problem and mapping the most meaningful solution space.</p>
+              </div>
+              <div className="flight-step">
+                <h3 className="flight-step-heading">
+                  <span className="flight-step-num">03.</span> DESIGN
+                </h3>
+                <p className="flight-step-desc">Exploring and building prototypes that are clear, considered, and testable.</p>
+              </div>
+              <div className="flight-step">
+                <h3 className="flight-step-heading">
+                  <span className="flight-step-num">04.</span> REFINE
+                </h3>
+                <p className="flight-step-desc">Testing, learning and sharpening until the solution earns its place.</p>
+              </div>
+            </div>
           </div>
         </section>
+
+        <div style={{ padding: "24px 0" }}>
+          <GateSeparator gate="04 — BOARDING" />
+        </div>
 
         {/* 5. ABOUT */}
         <section
@@ -771,6 +880,10 @@ export default function Home() {
         >
           <BoardingPass />
         </section>
+
+        <div style={{ padding: "24px 0" }}>
+          <GateSeparator gate="05 — FINAL CALL" />
+        </div>
 
         {/* 6. CONTACT */}
         <section
@@ -782,61 +895,56 @@ export default function Home() {
             alignItems: "center",
             justifyContent: "center",
             padding: "4rem 1rem",
-            backgroundColor: "#ffffff"
           }}
         >
           <div className="reveal reveal-narrative"
             style={{
               maxWidth: "800px",
               margin: "0 auto",
-              padding: "140px 0",
+              padding: "60px 0",
               textAlign: "center",
             }}
           >
-            <div style={{ marginBottom: "36px", display: "flex", justifyContent: "center" }}>
+            <div className="gate-closing-bar">
+              <span className="gate-closing-label">GATE 05 · CLOSING</span>
+              <div className="gate-closing-track">
+                <div className="gate-closing-fill" />
+              </div>
+            </div>
+
+            <div className="led-board-glow-wrapper">
               <LedBoard />
             </div>
 
             <p
               style={{
-                fontSize: "48px",
+                fontSize: "38px",
                 fontWeight: 500,
-                lineHeight: 1.25,
+                lineHeight: 1.3,
                 color: "#222222",
                 maxWidth: "720px",
                 margin: "24px auto",
-                fontFamily: "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily: "'Cardo', serif",
               }}
             >
-              Let’s build thoughtful digital products together.
+              Last call. Gate closes when you close this tab.
             </p>
 
             {/* Primary CTA */}
             <a
-              href="mailto:neelabh@example.com"
+              href="mailto:iamneelabhsrivastava@gmail.com"
+              className="contact-cta-primary"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "8px",
-                padding: "14px 22px",
                 marginTop: "24px",
                 background: "#111111",
                 color: "#ffffff",
-                borderRadius: "10px",
-                fontSize: "14px",
-                letterSpacing: "0.06em",
                 textTransform: "uppercase",
                 textDecoration: "none",
-                transition: "all 0.2s ease",
                 fontFamily: "'IBM Plex Mono', monospace",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
               }}
             >
               <span>COLLABORATE</span>
@@ -846,51 +954,48 @@ export default function Home() {
             {/* Secondary links */}
             <div
               style={{
-                fontSize: "15px",
                 color: "#555555",
                 marginTop: "28px",
                 display: "flex",
                 justifyContent: "center",
-                gap: "22px",
+                alignItems: "center",
+                gap: "16px",
+                flexWrap: "wrap",
               }}
             >
               {[
-                { label: "Email", href: "mailto:neelabh@example.com" },
-                { label: "LinkedIn", href: "https://www.linkedin.com" },
+                { label: "Email", href: "mailto:iamneelabhsrivastava@gmail.com" },
+                { label: "LinkedIn", href: "https://www.linkedin.com/in/neelabhsr", external: true },
                 { label: "Resume", href: "#" },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  style={{
-                    fontSize: "15px",
-                    color: "#555555",
-                    textDecoration: "none",
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#111111";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#555555";
-                  }}
-                >
-                  {link.label}
-                </a>
+              ].map((link, idx) => (
+                <React.Fragment key={link.label}>
+                  {idx > 0 && <span className="link-sep" aria-hidden="true">·</span>}
+                  <a
+                    href={link.href}
+                    className="contact-secondary-link"
+                    {...(link.external && { target: "_blank", rel: "noopener noreferrer" })}
+                    style={{
+                      color: "#555555",
+                      textDecoration: "none",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "#111111";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#555555";
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </React.Fragment>
               ))}
             </div>
 
-            <div
-              style={{
-                fontSize: "11px",
-                letterSpacing: "0.18em",
-                color: "#999999",
-                marginTop: "44px",
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-            >
-              STATUS: AVAILABLE FOR PRODUCT DESIGN ROLES
+            <div className="contact-status-line">
+              <span className="status-dot" aria-hidden="true" />
+              <span>STATUS: AVAILABLE FOR PRODUCT DESIGN ROLES</span>
             </div>
           </div>
         </section>
@@ -900,7 +1005,7 @@ export default function Home() {
       {/* ── Footer / Runway ── */}
       <footer
         style={{
-          padding: "100px 0 70px",
+          padding: "64px 0 48px",
           textAlign: "center",
           backgroundColor: "#0B0B0B",
           color: "#EAEAEA",
@@ -914,23 +1019,15 @@ export default function Home() {
             padding: "0 24px",
           }}
         >
-          <div
-            style={{
-              fontSize: "12px",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
-              color: "#aaaaaa",
-              marginTop: "10px",
-              fontFamily: "'IBM Plex Mono', monospace",
-            }}
-          >
+          <div className="footer-stamp">
             FLIGHT COMPLETE
           </div>
           <div
             style={{
-              fontSize: "16px",
+              fontSize: "15px",
               marginTop: "12px",
-              color: "#cccccc",
+              marginBottom: "32px",
+              color: "#999",
               fontFamily: "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             }}
           >
@@ -939,7 +1036,7 @@ export default function Home() {
 
           {/* Runway lights */}
           <div className="runway-lights-row">
-            {Array.from({ length: 36 }).map((_, idx) => (
+            {Array.from({ length: 24 }).map((_, idx) => (
               <span
                 key={idx}
                 className="runway-light"
@@ -951,30 +1048,10 @@ export default function Home() {
           </div>
 
           {/* Metadata */}
-          <div
-            style={{
-              fontSize: "12px",
-              letterSpacing: "0.12em",
-              color: "#7a7a7a",
-              marginTop: "32px",
-              fontFamily: "'IBM Plex Mono', monospace",
-              textTransform: "uppercase",
-            }}
-          >
-            © 2026 Neelabh Srivastava
-          </div>
-          <div
-            style={{
-              fontSize: "12px",
-              letterSpacing: "0.12em",
-              color: "#7a7a7a",
-              marginTop: "8px",
-              fontFamily: "'IBM Plex Mono', monospace",
-              textTransform: "uppercase",
-            }}
-          >
-            Terminal: Internet · Gate: UX
-          </div>
+          <p className="footer-meta">
+            © 2026 Neelabh Srivastava · UX Airways · Terminal: Internet · Gate: UX
+          </p>
+          <p className="footer-tail">REG: ND2026UX · AIRCRAFT: PRODUCT DESIGN · CREW: 01</p>
         </div>
       </footer>
     </>

@@ -204,57 +204,6 @@ export function SplitflapBoard() {
         aria-live="polite"
         aria-label="Availability status"
       />
-      <div
-        style={{
-          marginTop: "39px",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <a
-          href="mailto:neelabh@example.com"
-          className="collaborate-btn"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            color: "#111111",
-            fontSize: "14px",
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 500,
-            letterSpacing: "0.06em",
-            textDecoration: "none",
-            paddingBottom: "4px",
-            borderBottom: "1px solid rgba(17, 17, 17, 0.2)",
-            transition: "border-color 0.2s ease, opacity 0.2s ease",
-          }}
-        >
-          Collaborate
-          <span
-            className="collab-arrow"
-            style={{
-              display: "inline-block",
-              transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.5 6H9.5M9.5 6L6 2.5M9.5 6L6 9.5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="square"
-                strokeLinejoin="miter"
-              />
-            </svg>
-          </span>
-        </a>
-      </div>
     </div>
   );
 }
