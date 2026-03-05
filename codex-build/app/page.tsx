@@ -488,7 +488,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "80px 1rem 40px",
+            padding: "140px 1rem 60px",
             backgroundColor: "#ffffff",
             position: "relative",
             overflow: "hidden"
@@ -602,7 +602,7 @@ export default function Home() {
           <div className="hero-grid-fade" />
         </section>
 
-        <div style={{ padding: "24px 0" }}>
+        <div style={{ padding: "40px 0" }}>
           <GateSeparator gate="01 — DEPARTURES" />
         </div>
 
@@ -616,7 +616,7 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "60px 1rem",
+            padding: "4rem 1rem",
             backgroundColor: "#ffffff"
           }}
         >
@@ -642,7 +642,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div style={{ padding: "24px 0" }}>
+        <div style={{ padding: "40px 0" }}>
           <GateSeparator gate="02 — DESTINATIONS" />
         </div>
 
@@ -655,7 +655,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "60px 1rem",
+            padding: "140px 1rem 8rem 1rem",
             backgroundColor: "#ffffff"
           }}
         >
@@ -790,7 +790,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div style={{ padding: "24px 0" }}>
+        <div style={{ padding: "40px 0" }}>
           <GateSeparator gate="03 — FLIGHT PATH" />
         </div>
 
@@ -804,7 +804,7 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "60px 1rem",
+            padding: "8rem 1rem",
             backgroundColor: "#fafafa"
           }}
         >
@@ -869,7 +869,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div style={{ padding: "24px 0" }}>
+        <div style={{ padding: "40px 0" }}>
           <GateSeparator gate="04 — BOARDING" />
         </div>
 
@@ -881,7 +881,7 @@ export default function Home() {
           <BoardingPass />
         </section>
 
-        <div style={{ padding: "24px 0" }}>
+        <div style={{ padding: "40px 0" }}>
           <GateSeparator gate="05 — FINAL CALL" />
         </div>
 
@@ -901,7 +901,7 @@ export default function Home() {
             style={{
               maxWidth: "800px",
               margin: "0 auto",
-              padding: "60px 0",
+              padding: "140px 0",
               textAlign: "center",
             }}
           >
