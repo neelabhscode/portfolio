@@ -675,7 +675,7 @@ export default function Home() {
           </div>
 
           <div className="project-grid">
-            {[
+          {[
               {
                 title: "MIROOH",
                 route: "UX-01",
@@ -684,6 +684,7 @@ export default function Home() {
                 desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
                 status: "BOARDING" as const,
                 placeholder: false,
+                href: "#",
               },
               {
                 title: "KULLVI WHIMS",
@@ -693,6 +694,7 @@ export default function Home() {
                 desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
                 status: "ON TIME" as const,
                 placeholder: false,
+                href: "/kullvi/index.html",
               },
               {
                 title: "TILFI",
@@ -702,6 +704,7 @@ export default function Home() {
                 desc: "Redesigning product discovery and purchase flow to improve usability and trust.",
                 status: "CASE STUDY READY" as const,
                 placeholder: false,
+                href: "#",
               },
               {
                 title: "ROUTE UNDISCLOSED",
@@ -711,10 +714,11 @@ export default function Home() {
                 desc: "Next destination being charted. Check back soon.",
                 status: "COMING SOON" as const,
                 placeholder: true,
+                href: undefined,
               }
             ].map((proj, idx) => (
               <a
-                href={proj.placeholder ? undefined : "#"}
+              href={proj.placeholder ? undefined : proj.href}
                 className="project-card"
                 key={idx}
                 style={{
